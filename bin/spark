@@ -270,13 +270,13 @@ function enableSSL(app, env) {
 
 function changeUser() {
   // user / group
-  if (env.uid) {
-      log('user [bold]{' + env.uid + '}');
-      process.setuid(env.uid);
-  }
   if (env.gid) {
       log('group [bold]{' + env.gid + '}');
       process.setgid(env.gid);
+  }
+  if (env.uid) {
+      log('user [bold]{' + env.uid + '}');
+      process.setuid(env.uid);
   }
 }
 
