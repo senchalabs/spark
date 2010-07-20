@@ -342,7 +342,7 @@ function start() {
                 process.argv[0],
                 [__filename, '--child'],
                 undefined,
-                [fds[1], -1, -1]
+                [fds[1], 1, 2]
             );
             log('child spawned [bold]{' + child.pid + '}');
 
@@ -353,15 +353,6 @@ function start() {
 
             child.stdin.write(JSON.stringify(env), 'ascii', fd);
 
-            // Log stdout / stderr
-            child.stdout.addListener('data', function(data){
-                process.stdout.write(data);
-            });
-            child.stderr.addListener('data', function(data){
-                // TODO: add a public API version of this.
-                // I'm not sure node has one yet.
-                process.binding('stdio').writeError(data);
-            });
         }
 
         changeUser();
