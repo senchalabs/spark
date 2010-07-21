@@ -18,4 +18,5 @@ var creds = crypto.createCredentials(
     });
 app.setSecure(creds);
 
-app.listen();
+app.listen(3000);
+console.log("https://localhost:3000/")
