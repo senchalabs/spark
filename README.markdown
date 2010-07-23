@@ -1,6 +1,6 @@
 # Spark
 
-Spark is a command-line tool used to start up node server instances.  It's part of the [Connect][] system, but can be used standalone with any node server.
+Spark is a command-line tool used to start up node server instances written by [Tj Holowaychuk](http://github.com/visionmedia) and [Tim Caswell](http://github.com/creationix).  It's part of the [Connect][http://github.com/senchalabs/connect] framework, however can be used standalone with _any_ node server.
 
 ## Features
 
@@ -24,8 +24,8 @@ Any node server can be used with spark.  All you need to do it create a file cal
 A hello-world example would look like this:
 
     module.exports = require('http').createServer(function (req, res) {
-      res.writeHead(200, {"Content-Type":"text-plain"});
-      res.end("Hello World");
+        res.writeHead(200, {"Content-Type":"text-plain"});
+        res.end("Hello World");
     });
 
 And then to run it you simply go to the folder containing the `app.js` and type:
@@ -36,7 +36,7 @@ The output you'll see will be:
 
     Spark server(34037) listening on http://*:3000 in development mode
 
-Where `34037` is the pid of the process.  If you want 4 processes to balance the requests across, no problem.
+Where `34037` is the process id. If you want 4 processes to balance the requests across, no problem.
 
     spark -n 4
 
