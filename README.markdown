@@ -30,7 +30,7 @@ A hello-world example would look like this:
 
 And then to run it you simply go to the folder containing the `app.js` and type:
 
-    spark
+    $ spark
 
 The output you'll see will be:
 
@@ -38,7 +38,7 @@ The output you'll see will be:
 
 Where `34037` is the process id. If you want 4 processes to balance the requests across, no problem.
 
-    spark -n 4
+    $ spark -n 4
 
 And you'll see:
 
