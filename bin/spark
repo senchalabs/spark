@@ -332,13 +332,14 @@ function start() {
         netBinding.listen(fd, 128);
 
         changeUser();
+        var children = [];
 
         for (var i = 0; i < workers; i++) {
             // Create an unnamed unix socket to pass the fd to the child.
             var fds = netBinding.socketpair();
 
             // Spawn the child process
-            var child = child_process.spawn(
+            var child = children[i] = child_process.spawn(
                 process.argv[0],
                 [__filename, '--child'],
                 undefined,
@@ -356,6 +357,16 @@ function start() {
         }
 
         changeUser();
+
+        // Forward signals to child processes, keeps the zombies at bay.
+        ['SIGINT', 'SIGHUP', 'SIGTERM'].forEach(function (signal) {
+          process.addListener(signal, function () {
+            children.forEach(function (child) {
+              try { child.kill(signal); } catch (err) {}
+            });
+            process.exit();
+          });
+        });
 
         return;
     }
