@@ -236,7 +236,7 @@ function requireApp(path) {
 function getAppPath() {
     var path = (env.appPath || '');
     if (path[0] !== '/') {
-      path = process.cwd() + '/' + path;
+        path = process.cwd() + '/' + path;
     }
 
     // App path not given, try app.js and server.js
@@ -263,8 +263,8 @@ function enableSSL(app, env) {
     if (env.sslKey) {
         var crypto = require('crypto');
         app.setSecure(crypto.createCredentials({
-          key: env.sslKey,
-          cert: env.sslCrt
+            key: env.sslKey,
+            cert: env.sslCrt
         }));
     }
 }
@@ -359,13 +359,17 @@ function start() {
         changeUser();
 
         // Forward signals to child processes, keeps the zombies at bay.
-        ['SIGINT', 'SIGHUP', 'SIGTERM'].forEach(function (signal) {
-          process.addListener(signal, function () {
-            children.forEach(function (child) {
-              try { child.kill(signal); } catch (err) {}
+        ['SIGINT', 'SIGHUP', 'SIGTERM'].forEach(function(signal){
+            process.addListener(signal, function(){
+                children.forEach(function(child){
+                    try {
+                        child.kill(signal);
+                    } catch (err) {
+                        // Ignore
+                    }
+                });
+                process.exit();
             });
-            process.exit();
-          });
         });
 
         return;
