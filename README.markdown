@@ -1,6 +1,6 @@
 # Spark
 
-Spark is a command-line tool used to start up node server instances written by [Tj Holowaychuk](http://github.com/visionmedia) and [Tim Caswell](http://github.com/creationix).  It's part of the [Connect][http://github.com/senchalabs/connect] framework, however can be used standalone with _any_ node server.
+Spark is a command-line tool used to start up node server instances written by [Tj Holowaychuk](http://github.com/visionmedia) and [Tim Caswell](http://github.com/creationix).  It's part of the [Connect](http://github.com/senchalabs/connect) framework, however can be used standalone with _any_ node server.
 
 ## Features
 
