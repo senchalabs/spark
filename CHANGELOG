@@ -1,0 +1,3 @@
+v0.0.2 - Add passing SIGINT, SIGHUP, and SIGTERM to child processes when in multi-core mode
+
+v0.0.1 - Initial split from connect
