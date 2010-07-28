@@ -289,11 +289,10 @@ function changeUser() {
 function startWorker() {
     var stdin = new net.Stream(0, 'unix');
     stdin.addListener('data', function(json){
-        env = JSON.parse(json.toString());
+        process.sparkEnv = env = JSON.parse(json.toString());
     });
     stdin.addListener('fd', function(fd){
         var app = requireApp(getAppPath());
-        app.env = env;
         sys.error('Spark server(' + process.pid + ') listening on '
             + 'http' + (env.sslKey ? 's' : '') + '://'
             + (env.host || '*') + ':' + env.port
@@ -374,7 +373,6 @@ function start() {
 
     // Load the app module
     var app = requireApp(path);
-    app.env = env;
     sys.error('Spark server(' + process.pid + ') listening on '
         + 'http' + (env.sslKey ? 's' : '') + '://'
         + (env.host || '*') + ':' + env.port
