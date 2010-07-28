@@ -70,6 +70,7 @@ var usage = ''
     + '  -n, --workers NUM    Number of worker processes to spawn\n'
     + '  -I, --include PATH   Unshift the given path to require.paths\n'
     + '  -E, --env NAME       Set environment, defaults to "development"\n'
+    + '  -M, --mode NAME      Alias of -E, --env\n'
     + '  -e, --eval CODE      Evaluate the given string\n'
     + '  -C, --chdir PATH     Change to the given path\n'
     + '  -c, --config PATH    Load configuration module\n'
@@ -452,6 +453,10 @@ function parseArguments(args, cmd) {
             case '-E':
             case '--env':
                 env.name = requireArg('--env');
+                break;
+            case '-M':
+            case '--mode':
+                env.name = requireArg('--mode');
                 break;
             case '-c':
             case '--config':
