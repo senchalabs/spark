@@ -314,7 +314,7 @@ function start() {
     // Detect config.js
     if (exists('./config.js')) {
         log('detected config.js');
-        loadConfig('./config');
+        loadConfig('./config.js');
     }
 
     // Application path
