@@ -27,6 +27,12 @@ var child_process = require('child_process'),
 var version = '0.2.1';
 
 /**
+ * Process comment.
+ */
+
+var comment;
+
+/**
  * Use child process workers to utilize all cores
  */
 
@@ -337,11 +343,17 @@ function start() {
         for (var i = 0; i < workers; i++) {
             // Create an unnamed unix socket to pass the fd to the child.
             var fds = netBinding.socketpair();
-
+            
+            // Collect the child process arguments
+            var args = [__filename, '--child'];
+            if (comment) {
+                args.push('--comment', comment);
+            }
+            
             // Spawn the child process
             var child = children[i] = child_process.spawn(
                 process.argv[0],
-                [__filename, '--child'],
+                args,
                 undefined,
                 [fds[1], 1, 2]
             );
@@ -414,8 +426,7 @@ function parseArguments(args, cmd) {
     while (args.length) {
         switch (arg = args.shift()) {
             case '--comment':
-              requireArg('--comment');
-              // Ignore it
+              comment = requireArg('--comment');
               break;
             case '--child':
               cmd = "worker";
