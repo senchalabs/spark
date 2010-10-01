@@ -55,7 +55,7 @@ var useColors = true;
  */
 
 var env = process.sparkEnv = {
-    name: process.env.SPARK_ENV || 'development',
+    name: process.env.NODE_ENV || 'development',
     port: 3000,
     host: null
 };
