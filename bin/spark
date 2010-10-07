@@ -299,7 +299,6 @@ function startWorker() {
         process.sparkEnv = env = JSON.parse(json.toString());
     });
     stdin.addListener('fd', function(fd){
-        var stream;
         var app = requireApp(getAppPath());
         if (env.pidfile) {
             fs.open(env.pidfile, 'a+', function(err, fd) {
