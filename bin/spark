@@ -74,6 +74,7 @@ var usage = ''
     + '  --ssl-key PATH       SSL key file\n'
     + '  --ssl-crt PATH       SSL certificate file\n'
     + '  -n, --workers NUM    Number of worker processes to spawn\n'
+    + '  -p, --pidfile PATH   File to store PID of server and any child PIDs\n'
     + '  -I, --include PATH   Unshift the given path to require.paths\n'
     + '  -E, --env NAME       Set environment, defaults to "development"\n'
     + '  -M, --mode NAME      Alias of -E, --env\n'
@@ -298,7 +299,19 @@ function startWorker() {
         process.sparkEnv = env = JSON.parse(json.toString());
     });
     stdin.addListener('fd', function(fd){
+        var stream;
         var app = requireApp(getAppPath());
+        if (env.pidfile) {
+            fs.open(env.pidfile, 'a+', function(err, fd) {
+                if (err) {
+                    sys.error(err)
+                    return;
+                }
+                else {
+                    fs.write(fd, process.pid + '\n');
+                }
+            });
+        }
         sys.error('Spark server(' + process.pid + ') listening on '
             + 'http' + (env.sslKey ? 's' : '') + '://'
             + (env.host || '*') + ':' + env.port
@@ -380,6 +393,11 @@ function start() {
                         // Ignore
                     }
                 });
+
+                if (env.pidfile) {
+                    fs.unlinkSync(env.pidfile);
+                }
+
                 process.exit();
             });
         });
@@ -389,12 +407,30 @@ function start() {
 
     // Load the app module
     var app = requireApp(path);
+    if (env.pidfile) {
+        console.log('writing pidfile');
+        fs.open(env.pidfile, 'w', function(err, fd) {
+            if (err) {
+                sys.error(err)
+                return;
+            }
+            else {
+                fs.write(fd, process.pid + '\n');
+            }
+        });
+    }
     sys.error('Spark server(' + process.pid + ') listening on '
         + 'http' + (env.sslKey ? 's' : '') + '://'
         + (env.host || '*') + ':' + env.port
         + ' in ' + env.name + ' mode');
     enableSSL(app, env);
     app.listen(env.port, env.host);
+
+    process.on('exit', function() {
+        if (env.pidfile) {
+            fs.unlinkSync(env.pidfile);
+        }
+    });
 
     changeUser();
 }
@@ -496,6 +532,10 @@ function parseArguments(args, cmd) {
                 break;
             case '--ssl-crt':
                 env.sslCrt = fs.readFileSync(requireArg('--ssl-crt'), 'ascii');
+                break;
+            case '-p':
+            case '--pidfile':
+                env.pidfile = requireArg('--pidfile');
                 break;
             default:
                 if (arg[0] === '-') {
