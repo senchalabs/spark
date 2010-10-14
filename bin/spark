@@ -14,6 +14,7 @@ var child_process = require('child_process'),
     netBinding = process.binding('net'),
     dirname = require('path').dirname,
     exists = require('path').existsSync,
+    resolve = require('url').resolve,
     http = require('http'),
     sys = require('sys'),
     fs = require('fs'),
@@ -56,6 +57,7 @@ var useColors = true;
 
 var env = process.sparkEnv = {
     name: process.env.NODE_ENV || 'development',
+    socket: null,
     port: 3000,
     host: null
 };
@@ -69,6 +71,7 @@ var usage = ''
     + '\n'
     + '[bold]{Options}:\n'
     + '  --comment            Ignored, this is to label the process in htop\n'
+    + '  -s, --socket PATH    Unix socket to listen on'
     + '  -H, --host ADDR      Host address, defaults to INADDR_ANY\n'
     + '  -p, --port NUM       Port number, defaults to 3000\n'
     + '  --ssl-key PATH       SSL key file\n'
@@ -390,11 +393,14 @@ function start() {
     // Load the app module
     var app = requireApp(path);
     sys.error('Spark server(' + process.pid + ') listening on '
-        + 'http' + (env.sslKey ? 's' : '') + '://'
-        + (env.host || '*') + ':' + env.port
+        + (env.socket ? 'unix socket ' + env.socket : 'http' + (env.sslKey ? 's' : '') + '://' + (env.host || '*') + ':' + env.port)
         + ' in ' + env.name + ' mode');
     enableSSL(app, env);
-    app.listen(env.port, env.host);
+    if (env.socket) {
+        app.listen(env.socket);
+    } else {
+        app.listen(env.port, env.host);
+    }
 
     changeUser();
 }
@@ -442,6 +448,10 @@ function parseArguments(args, cmd) {
             case '-e':
             case '--eval':
                 eval(requireArg('--eval'));
+                break;
+            case '-s':
+            case '--socket':
+                env.socket = resolve(process.cwd(), requireArg('--socket'));
                 break;
             case '-p':
             case '--port':
