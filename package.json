@@ -4,7 +4,8 @@
   "version": "0.1.2",
   "contributors": [ 
     { "name": "Tim Caswell", "email": "tim@sencha.com" },
-    { "name": "TJ Holowaychuk", "email": "tj@sencha.com" }
+    { "name": "TJ Holowaychuk", "email": "tj@sencha.com" },
+    { "name": "Sergey Belov", "email": "peimei@ya.ru" }
   ],
   "bin": { "spark": "./bin/spark" },
   "engines": { "node": ">= 0.1.100" }
