@@ -15,7 +15,7 @@ var child_process = require('child_process'),
     dirname = require('path').dirname,
     exists = require('path').existsSync,
     http = require('http'),
-    sys = require('sys'),
+    util = require(process.binding('natives').util ? 'util' : 'sys'),
     fs = require('fs'),
     cwd = process.cwd(),
     net = require('net');
@@ -96,7 +96,7 @@ var usage = ''
  */
 
 function log(msg) {
-    if (verbose) sys.error('... ' + colorize(msg));
+    if (verbose) util.error('... ' + colorize(msg));
 }
 
 /**
@@ -168,7 +168,7 @@ function modulePath(path){
  */
 
 function abort(msg, code) {
-    sys.error(colorize(msg));
+    util.error(colorize(msg));
     process.exit(code || 1);
 }
 
@@ -193,7 +193,7 @@ function loadConfig(file) {
 
         // Apply flags
         val.forEach(function(val){
-            log('  ' + key + ' ' + (val === true ? '' : sys.inspect(val)));
+            log('  ' + key + ' ' + (val === true ? '' : util.inspect(val)));
             args.push(key);
             if (typeof val !== 'boolean') {
                 args.push(val);
@@ -299,7 +299,7 @@ function startWorker() {
     });
     stdin.addListener('fd', function(fd){
         var app = requireApp(getAppPath());
-        sys.error('Spark server(' + process.pid + ') listening on '
+        util.error('Spark server(' + process.pid + ') listening on '
             + 'http' + (env.sslKey ? 's' : '') + '://'
             + (env.host || '*') + ':' + env.port
             + ' in ' + env.name + ' mode');
@@ -389,7 +389,7 @@ function start() {
 
     // Load the app module
     var app = requireApp(path);
-    sys.error('Spark server(' + process.pid + ') listening on '
+    util.error('Spark server(' + process.pid + ') listening on '
         + 'http' + (env.sslKey ? 's' : '') + '://'
         + (env.host || '*') + ':' + env.port
         + ' in ' + env.name + ' mode');
