@@ -24,7 +24,7 @@ var child_process = require('child_process'),
  * Framework version.
  */
 
-var version = '0.2.1';
+var version = '0.3.0';
 
 /**
  * Process comment.
