@@ -16,6 +16,7 @@ Spark provides the following options when starting a server.
  - Can change the working directory before running the app
  - `--comment` option to label processes in system tools like `ps` or `htop`
  - Pass arbitrary code or environment variables to the app
+ - Support [coffee-script](http://jashkenas.github.com/coffee-script/)
 
 ## Making an app spark compatible
 
