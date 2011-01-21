@@ -39,6 +39,22 @@ var comment;
 var workers;
 
 /**
+ * Coffee script support
+ */
+
+var fileExtname
+
+try {
+    var coffee  = require('coffee-script');
+    require.registerExtension('.coffee', function (content) {
+      return coffee.compile(content);
+    });
+    fileExtname = /\.(js|coffee)$/;
+} catch (_) {
+    fileExtname = /\.js$/;
+}
+
+/**
  * Verbose output.
  */
 
@@ -157,7 +173,7 @@ function mkdirs(path, mode) {
  */
 
 function modulePath(path){
-    return path.replace(/\.js$/, '');
+    return path.replace(fileExtname, '');
 }
 
 /**
@@ -253,8 +269,14 @@ function getAppPath() {
         } else if (exists(path + 'server.js')) {
             log('detected server.js');
             path += 'server';
+        } else if (exists(path + 'app.coffee')) {
+            log('detected app.coffee');
+            path += 'app';
+        } else if (exists(path + 'server.coffee')) {
+            log('detected server.coffee');
+            path += 'server';
         } else {
-            abort('app not found, pass a module path, or create {app,server}.js');
+            abort('app not found, pass a module path, or create {app,server}.{js,coffee}');
         }
     }
 
