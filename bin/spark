@@ -270,9 +270,15 @@ function getAppPath() {
             log('detected server.js');
             path += 'server';
         } else if (exists(path + 'app.coffee')) {
+            if (!require.extensions['.coffee']) {
+              abort('coffee-script not found, try `npm install coffee-script`');
+            }
             log('detected app.coffee');
             path += 'app';
         } else if (exists(path + 'server.coffee')) {
+            if (!require.extensions['.coffee']) {
+              abort('coffee-script not found, try `npm install coffee-script`');
+            }
             log('detected server.coffee');
             path += 'server';
         } else {
