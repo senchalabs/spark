@@ -2,6 +2,8 @@
 
 Spark is a command-line tool used to start up node server instances written by [Tj Holowaychuk](http://github.com/visionmedia) and [Tim Caswell](http://github.com/creationix).  It's part of the [Connect](http://github.com/senchalabs/connect) framework, however can be used standalone with _any_ node server.
 
+__NOTE__: spark is no longer maintained, for an extensible, and more robust solution check out [Cluster](http://learnboost.github.com/cluster).
+
 ## Features
 
 Spark provides the following options when starting a server.
