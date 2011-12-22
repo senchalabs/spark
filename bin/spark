@@ -11,7 +11,7 @@
  */
 
 var child_process = require('child_process'),
-    netBinding = process.binding('net'),
+    netBinding = require('net'),
     dirname = require('path').dirname,
     exists = require('path').existsSync,
     http = require('http'),
