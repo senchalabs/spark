@@ -33,6 +33,12 @@ var version = '0.3.0';
 var comment;
 
 /**
+ * Process comment.
+ */
+
+var comment;
+
+/**
  * Use child process workers to utilize all cores
  */
 
