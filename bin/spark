@@ -51,6 +51,12 @@ var verbose;
 var useColors = true;
 
 /**
+ * CoffeeScript support.
+ */
+
+var enableCoffee = false;
+
+/**
  * Environment defaults.
  */
 
@@ -82,6 +88,7 @@ var usage = ''
     + '  -c, --config PATH    Load configuration module\n'
     + '  -u, --user ID|NAME   Change user with setuid()\n'
     + '  -g, --group ID|NAME  Change group with setgid()\n'
+    + '  --coffee             Enable CoffeeScript support\n'
     + '  -v, --verbose        Enable verbose output\n'
     + '  -V, --version        Output spark version\n'
     + '  -K, --no-color       Suppress colored terminal output\n'
@@ -150,14 +157,25 @@ function mkdirs(path, mode) {
 }
 
 /**
- * Strip ".js" extension from the given path.
+ * Append target extension to the given path.
+ *
+ * @param {String} path
+ * @return {String}
+ */
+
+function appendExtension(path) {
+    return path + (enableCoffee ? '.coffee' : '.js');
+}
+
+/**
+ * Strip target extension from the given path.
  *
  * @param {String} path
  * @return {String}
  */
 
 function modulePath(path){
-    return path.replace(/\.js$/, '');
+    return path.replace(new RegExp(appendExtension('').replace('.', '\\.') + '$'), '');
 }
 
 /**
@@ -247,14 +265,14 @@ function getAppPath() {
 
     // App path not given, try app.js and server.js
     if (!env.appPath) {
-        if (exists(path + 'app.js')) {
-            log('detected app.js');
+        if (exists(path + appendExtension('app'))) {
+            log('detected ' + appendExtension('app'));
             path += 'app';
-        } else if (exists(path + 'server.js')) {
-            log('detected server.js');
+        } else if (exists(path + appendExtension('server'))) {
+            log('detected ' + appendExtension('server'));
             path += 'server';
         } else {
-            abort('app not found, pass a module path, or create {app,server}.js');
+            abort('app not found, pass a module path, or create ' + appendExtension('{app,server}'));
         }
     }
 
@@ -318,9 +336,9 @@ function start() {
     log('starting');
 
     // Detect config.js
-    if (exists('./config.js')) {
-        log('detected config.js');
-        loadConfig('./config.js');
+    if (exists(appendExtension('./config'))) {
+        log('detected ' + appendExtension('config'));
+        loadConfig(appendExtension('./config'));
     }
 
     // Application path
@@ -348,6 +366,10 @@ function start() {
             var args = [__filename, '--child'];
             if (comment) {
                 args.push('--comment', comment);
+            }
+
+            if (enableCoffee) {
+                args.push('--coffee');
             }
             
             // Spawn the child process
@@ -496,6 +518,10 @@ function parseArguments(args, cmd) {
                 break;
             case '--ssl-crt':
                 env.sslCrt = fs.readFileSync(requireArg('--ssl-crt'), 'ascii');
+                break;
+            case '--coffee':
+                enableCoffee = true;
+                require('coffee-script');
                 break;
             default:
                 if (arg[0] === '-') {
